@@ -1,0 +1,335 @@
+SQL> -- KyleGalwayDBAS32100Assignment1.sql
+SQL> -- Kyle Galway 
+SQL> -- s6_galwayk
+SQL> -- Question 1. Create a view called customer_contacts that would contain  
+SQL> -- the sales person's full name, the customer name, and their contacts.
+SQL> -- Question 2. Write a statement that uses the view created in the previous 
+SQL> -- question to show the information for Minnesota customers.
+SQL> -- Question 3. Using an outer join query, show the names and addresses of the 
+SQL> -- customers from Minnestota that have never placed any orders.
+SQL> -- Question 4. Show the product name, total amount, the average amount (rounded 
+SQL> -- to 2 floating points), as well as the number o orders that are placed for 
+SQL> -- products that contain the World, "Kingston" in their product name. The names 
+SQL> -- for each individual product name must be shown separately. 
+SQL> -- Question 5. The salesperson performances are evaluated into categeories as 
+SQL> -- follows: Low for less than 7 orders, Medium for between 7 and 10 order, and 
+SQL> -- high for greater than 10 orders. Display the first name, lastname, number of 
+SQL> -- sales, and category of performance of the salespeople. 
+SQL> -- Question 6. Using SET operations, show the location ID, address, postal code,
+SQL> -- and state of those locations from region 2 which do not have warehouses.
+SQL> -- Question 7. Using advanced grouping, find out the number of orders for 
+SQL> -- each customer that have a credit limit of 600. Show the customer name, credit 
+SQL> -- limit, and subcounts for each customer name. 
+SQL> 
+SQL> -- Question 1.
+SQL> CREATE OR REPLACE view 
+  2      customer_contacts 
+  3  AS SELECT DISTINCT
+  4      em.first_name || ' ' || em.last_name as "employee_name",
+  5      cu.name as "customer_name", 
+  6      cu.address as "customer_address",
+  7      co.first_name || ' ' || co.last_name as "contact_name", 
+  8      co.phone as "contact_phone"
+  9  FROM 
+ 10      ot.customers cu
+ 11  INNER JOIN 
+ 12      ot.orders od
+ 13  ON 
+ 14      cu.customer_id = od.customer_id
+ 15  INNER JOIN 
+ 16      ot.employees em 
+ 17  ON 
+ 18      em.employee_id = od.salesman_id
+ 19  INNER JOIN 
+ 20      ot.contacts co 
+ 21  ON
+ 22      co.customer_id = cu.customer_id;
+
+View CUSTOMER_CONTACTS created.
+
+SQL> 
+SQL> SELECT
+  2      *
+  3  FROM
+  4      customer_contacts;
+
+employee_name        customer_name                    customer_address                             contact_name         contact_phone      
+Isabelle Marshall    Centene                          4019 W 3Rd St, Bloomington, IN               Jeni Levy            +1 812 123 4129    
+Chloe Cruz           International Paper              136 E Market St # 800, Indianapolis, IN      Meenakshi Mason      +1 317 123 4141    
+Florence Freeman     PNC Financial Services Group     322 E Michigan St, Milwaukee, WI             Wallace Dillard      +1 414 123 4350    
+Freya Gomez          Micron Technology                411 E Wisconsin Ave # 2550, Milwaukee, WI    Tennie Gay           +1 414 123 4369    
+Grace Ellis          Dollar Tree                      1501 Lowry Ave N, Minneapolis, MN            Agustina Conner      +1 612 123 4399    
+Daisy Ortiz          AbbVie                           6445 Bay Harbor Ln, Indianapolis, IN         Shyla Ortiz          +1 317 123 4126    
+Florence Freeman     Centene                          4019 W 3Rd St, Bloomington, IN               Jeni Levy            +1 812 123 4129    
+Daisy Ortiz          Community Health Systems         1608 Portage Ave, South Bend, IN             Matthias Hannah      +1 219 123 4136    
+Daisy Ortiz          Alcoa                            23943 Us Highway 33, Elkhart, IN             Matthias Cruise      +1 219 123 4138    
+Grace Ellis          Alcoa                            23943 Us Highway 33, Elkhart, IN             Matthias Cruise      +1 219 123 4138    
+Daisy Ortiz          CenturyLink                      2120 Heights Dr, Eau Claire, WI              Khalilah Holman      +1 745 123 4306    
+Freya Gomez          NextEra Energy                   4715 Sprecher Rd, Madison, WI                Gertrude Cooke       +1 608 123 4318    
+Florence Freeman     Colgate-Palmolive                808 3Rd St # 100, Wausau, WI                 Ophelia Hurst        +1 715 123 4372    
+Grace Ellis          ConAgra Foods                    122 E Dayton St, Madison, WI                 Birgit Stephenson    +1 608 123 4374    
+Isabelle Marshall    Gap                              2122 Campbell Rd, La Crosse, WI              Alysa Kane           +1 608 123 4378    
+Florence Freeman     Plains GP Holdings               2515 Bloyd Ave, Indianapolis, IN             Lavera Emerson       +1 317 123 4111    
+Lily Fisher          Plains GP Holdings               2515 Bloyd Ave, Indianapolis, IN             Lavera Emerson       +1 317 123 4111    
+Grace Ellis          AbbVie                           6445 Bay Harbor Ln, Indianapolis, IN         Shyla Ortiz          +1 317 123 4126    
+Grace Ellis          AutoNation                       1801 Monroe Ave Nw, Grand Rapids, MI         Guillaume Edwards    +1 616 123 4162    
+Chloe Cruz           CenturyLink                      2120 Heights Dr, Eau Claire, WI              Khalilah Holman      +1 745 123 4306    
+Grace Ellis          Southern                         1314 N Stoughton Rd, Madison, WI             Audie Flores         +1 608 123 4309    
+Isabelle Marshall    NextEra Energy                   4715 Sprecher Rd, Madison, WI                Gertrude Cooke       +1 608 123 4318    
+Chloe Cruz           Sempra Energy                    633 S Hawley Rd, Milwaukee, WI               Shameka Spencer      +1 414 123 4376    
+Evie Harrison        Baker Hughes                     3324 N Oakland Ave, Milwaukee, WI            Fransisca Reeves     +1 414 123 4381    
+Florence Freeman     US Foods Holding                 8768 N State Rd 37, Bloomington, IN          Fern Head            +1 812 123 4115    
+Evie Harrison        AbbVie                           6445 Bay Harbor Ln, Indianapolis, IN         Shyla Ortiz          +1 317 123 4126    
+Evie Harrison        Emerson Electric                 1905 College St, South Bend, IN              Christian Cage       +1 219 123 4142    
+Chloe Cruz           Emerson Electric                 1905 College St, South Bend, IN              Christian Cage       +1 219 123 4142    
+Lily Fisher          Aflac                            Lucas Dr Bldg 348, Detroit, MI               Geraldine Martin     +1 313 123 4160    
+Evie Harrison        Supervalu                        8989 N Port Washington Rd, Milwaukee, WI     Isreal Rose          +1 414 123 4307    
+Lily Fisher          Supervalu                        8989 N Port Washington Rd, Milwaukee, WI     Isreal Rose          +1 414 123 4307    
+Scarlett Gibson      NGL Energy Partners              615 N Sherman Ave, Madison, WI               Corliss Mcneil       +1 608 123 4332    
+Freya Gomez          Bristol-Myers Squibb             512 E Grand Ave, Beloit, WI                  Brock Webb           +1 608 123 4344    
+Grace Ellis          Freeport-McMoRan                 300 Crooks St, Green Bay, WI                 Ciara Flowers        +1 414 123 4373    
+Isabelle Marshall    Raytheon                         514 W Superior St, Kokomo, IN                Flor Stone           +1 317 123 4104    
+Grace Ellis          Plains GP Holdings               2515 Bloyd Ave, Indianapolis, IN             Lavera Emerson       +1 317 123 4111    
+Freya Gomez          US Foods Holding                 8768 N State Rd 37, Bloomington, IN          Fern Head            +1 812 123 4115    
+Scarlett Gibson      Community Health Systems         1608 Portage Ave, South Bend, IN             Matthias Hannah      +1 219 123 4136    
+Freya Gomez          Supervalu                        8989 N Port Washington Rd, Milwaukee, WI     Isreal Rose          +1 414 123 4307    
+Freya Gomez          Southern                         1314 N Stoughton Rd, Madison, WI             Audie Flores         +1 608 123 4309    
+Freya Gomez          Goodyear Tire & Rubber           600 N Broadway Fl 1, Milwaukee, WI           Melany Mcmahon       +1 414 123 4347    
+Chloe Cruz           PPG Industries                   2800 Chicago Ave # 100, Minneapolis, MN      Trang Mcconnell      +1 612 123 4419    
+Freya Gomez          Raytheon                         514 W Superior St, Kokomo, IN                Flor Stone           +1 317 123 4104    
+Grace Ellis          US Foods Holding                 8768 N State Rd 37, Bloomington, IN          Fern Head            +1 812 123 4115    
+Evie Harrison        Centene                          4019 W 3Rd St, Bloomington, IN               Jeni Levy            +1 812 123 4129    
+Daisy Ortiz          International Paper              136 E Market St # 800, Indianapolis, IN      Meenakshi Mason      +1 317 123 4141    
+Chloe Cruz           Jabil Circuit                    221 3Rd Ave Se # 300, Cedar Rapids, IA       Classie Norris       +1 319 123 4301    
+Isabelle Marshall    Jabil Circuit                    221 3Rd Ave Se # 300, Cedar Rapids, IA       Classie Norris       +1 319 123 4301    
+Lily Fisher          Jabil Circuit                    221 3Rd Ave Se # 300, Cedar Rapids, IA       Classie Norris       +1 319 123 4301    
+Florence Freeman     Nucor                            5235 N Ironwood Ln, Milwaukee, WI            Rogelio Kirby        +1 414 123 4348    
+Freya Gomez          Health Net                       1400 Bellinger St Fl 4, Eau Claire, WI       Gia Boyle            +1 745 123 4367    
+Grace Ellis          International Paper              136 E Market St # 800, Indianapolis, IN      Meenakshi Mason      +1 317 123 4141    
+Freya Gomez          AutoNation                       1801 Monroe Ave Nw, Grand Rapids, MI         Guillaume Edwards    +1 616 123 4162    
+Florence Freeman     AutoNation                       1801 Monroe Ave Nw, Grand Rapids, MI         Guillaume Edwards    +1 616 123 4162    
+Freya Gomez          General Mills                    6555 W Good Hope Rd, Milwaukee, WI           Verena Hopper        +1 414 123 4308    
+Chloe Cruz           Bank of New York Mellon Corp.    666 22Nd Ave Ne, Minneapolis, MN             Jessika Merritt      +1 612 123 4397    
+Lily Fisher          Raytheon                         514 W Superior St, Kokomo, IN                Flor Stone           +1 317 123 4104    
+Florence Freeman     Community Health Systems         1608 Portage Ave, South Bend, IN             Matthias Hannah      +1 219 123 4136    
+Scarlett Gibson      Alcoa                            23943 Us Highway 33, Elkhart, IN             Matthias Cruise      +1 219 123 4138    
+Freya Gomez          Aflac                            Lucas Dr Bldg 348, Detroit, MI               Geraldine Martin     +1 313 123 4160    
+Isabelle Marshall    Progressive                      4925 Kendrick St Se, Grand Rapids, MI        Maurice Mahoney      +1 616 123 4181    
+Isabelle Marshall    General Mills                    6555 W Good Hope Rd, Milwaukee, WI           Verena Hopper        +1 414 123 4308    
+Florence Freeman     General Mills                    6555 W Good Hope Rd, Milwaukee, WI           Verena Hopper        +1 414 123 4308    
+Florence Freeman     NextEra Energy                   4715 Sprecher Rd, Madison, WI                Gertrude Cooke       +1 608 123 4318    
+Scarlett Gibson      AutoZone                         113 N 1St St, Minneapolis, MN                Roxanna Wade         +1 612 123 4408    
+Scarlett Gibson      Whole Foods Market               4200 Yosemite Ave S, Minneapolis, MN         Virgie Mays          +1 612 123 4417    
+
+66 rows selected. 
+
+SQL> 
+SQL> -- Question 2.
+SQL> SELECT 
+  2      *
+  3  FROM 
+  4      customer_contacts cc
+  5  WHERE 
+  6      upper(substr("customer_address", -2)) = 'MN';
+
+employee_name      customer_name                    customer_address                           contact_name       contact_phone      
+Grace Ellis        Dollar Tree                      1501 Lowry Ave N, Minneapolis, MN          Agustina Conner    +1 612 123 4399    
+Chloe Cruz         PPG Industries                   2800 Chicago Ave # 100, Minneapolis, MN    Trang Mcconnell    +1 612 123 4419    
+Chloe Cruz         Bank of New York Mellon Corp.    666 22Nd Ave Ne, Minneapolis, MN           Jessika Merritt    +1 612 123 4397    
+Scarlett Gibson    AutoZone                         113 N 1St St, Minneapolis, MN              Roxanna Wade       +1 612 123 4408    
+Scarlett Gibson    Whole Foods Market               4200 Yosemite Ave S, Minneapolis, MN       Virgie Mays        +1 612 123 4417    
+
+SQL> 
+SQL> -- Question 3. a) With aggregate grouping
+SQL> SELECT
+  2      cu.name, 
+  3      cu.address
+  4  FROM 
+  5      ot.customers cu
+  6  LEFT OUTER JOIN 
+  7      ot.orders od
+  8  ON 
+  9      cu.customer_id = od.customer_id
+ 10  WHERE 
+ 11      upper(substr(address, -2)) = 'MN'
+ 12  HAVING 
+ 13      count(od.customer_id) = 0
+ 14  GROUP BY 
+ 15      (cu.name, cu.address)
+ 16  ORDER BY 
+ 17      cu.name;
+
+NAME                      ADDRESS                                  
+Dow Chemical              160 Glenwood Ave, Minneapolis, MN        
+Energy Transfer Equity    1721 E Lake St, Minneapolis, MN          
+Genuine Parts             200 1St St Sw, Rochester, MN             
+Icahn Enterprises         314 W Superior St # 1015, Duluth, MN     
+Navistar International    1409 Willow St # 600, Minneapolis, MN    
+Owens & Minor             310 Broadway St, Alexandria, MN          
+Pfizer                    206 S Broadway # 707, Rochester, MN      
+
+7 rows selected. 
+
+SQL> 
+SQL> -- Question 3. b) With MINUS set operation
+SQL> SELECT 
+  2      cu.name as "name", 
+  3      cu.address as "address"
+  4  FROM 
+  5      ot.customers cu
+  6  LEFT OUTER JOIN 
+  7      ot.orders od
+  8  ON 
+  9      cu.customer_id = od.customer_id
+ 10  WHERE 
+ 11      upper(substr(cu.address, -2)) = 'MN'
+ 12  MINUS SELECT 
+ 13      cu.name, 
+ 14      cu.address
+ 15  FROM 
+ 16      ot.customers cu
+ 17  RIGHT OUTER JOIN 
+ 18      ot.orders od
+ 19  ON 
+ 20      cu.customer_id = od.customer_id
+ 21  ORDER BY
+ 22  "name";
+
+name                      address                                  
+Dow Chemical              160 Glenwood Ave, Minneapolis, MN        
+Energy Transfer Equity    1721 E Lake St, Minneapolis, MN          
+Genuine Parts             200 1St St Sw, Rochester, MN             
+Icahn Enterprises         314 W Superior St # 1015, Duluth, MN     
+Navistar International    1409 Willow St # 600, Minneapolis, MN    
+Owens & Minor             310 Broadway St, Alexandria, MN          
+Pfizer                    206 S Broadway # 707, Rochester, MN      
+
+7 rows selected. 
+
+SQL> 
+SQL> -- Question 4. 
+SQL> SELECT
+  2      pr.product_name
+  3    , SUM(pr.list_price * oi.quantity) AS "Total Value Sold"
+  4    , round(AVG(oi.unit_price)
+  5            , 2)                             AS "Average Sold Price"
+  6    , SUM(oi.quantity)                 AS "Number of Products Sold"
+  7    , COUNT(oi.product_id)             AS "Number of Orders Placed"
+  8  FROM
+  9           ot.products pr
+ 10      INNER JOIN ot.order_items oi
+ 11      ON oi.product_id = pr.product_id
+ 12  WHERE
+ 13      lower(pr.product_name) LIKE '%kingston%'
+ 14  GROUP BY
+ 15      pr.product_name;
+
+PRODUCT_NAME                Total Value Sold    Average Sold Price    Number of Products Sold    Number of Orders Placed    
+Kingston SA400S37/120G                 16936.92                 54.99                        308                          3 
+Kingston                              535614.95                663.04                        802                          9 
+Kingston HyperX Beast                 175199.15                863.05                        203                          2 
+Kingston SV300S37A/120G                  7783.1                 59.87                        130                          1 
+Kingston HyperX Predator              403217.66                635.99                        634                          6 
+
+SQL> 
+SQL> -- Question 5. 
+SQL> SELECT
+  2      em.first_name
+  3      || ' '
+  4         || em.last_name AS "Employee Name"
+  5    , em.employee_id
+  6    , CASE
+  7          WHEN COUNT(od.salesman_id) < 7              THEN
+  8              'Low'
+  9          WHEN COUNT(od.salesman_id) BETWEEN 7 AND 10 THEN
+ 10              'Medium'
+ 11          WHEN COUNT(od.salesman_id) > 10             THEN
+ 12              'High'
+ 13        END             AS "Performance Level"
+ 14  FROM
+ 15           ot.employees em
+ 16      INNER JOIN ot.orders od
+ 17      ON em.employee_id = od.salesman_id
+ 18  GROUP BY (
+ 19      em.first_name
+ 20    , em.last_name
+ 21    , em.employee_id
+ 22  )
+ 23  ORDER BY
+ 24      COUNT(od.salesman_id);
+
+Employee Name        EMPLOYEE_ID    Performance Level    
+Lily Fisher                      54 Low                  
+Scarlett Gibson                  57 Low                  
+Evie Harrison                    56 Low                  
+Daisy Ortiz                      61 Low                  
+Chloe Cruz                       59 Medium               
+Isabelle Marshall                60 Medium               
+Grace Ellis                      55 Medium               
+Florence Freeman                 64 High                 
+Freya Gomez                      62 High                 
+
+9 rows selected. 
+
+SQL> 
+SQL> -- Question 6.
+SQL> SELECT
+  2      location_id
+  3    , address
+  4    , postal_code
+  5    , state
+  6  FROM
+  7           ot.locations
+  8      INNER JOIN ot.countries
+  9      USING ( country_id )
+ 10      INNER JOIN ot.regions
+ 11      USING ( region_id )
+ 12  WHERE
+ 13      region_id = 2
+ 14  MINUS
+ 15  SELECT
+ 16      location_id
+ 17    , address
+ 18    , postal_code
+ 19    , state
+ 20  FROM
+ 21           ot.locations
+ 22      INNER JOIN ot.countries
+ 23      USING ( country_id )
+ 24      INNER JOIN ot.regions
+ 25      USING ( region_id )
+ 26      INNER JOIN ot.warehouses
+ 27      USING ( location_id )
+ 28  WHERE
+ 29      region_id = 2;
+
+LOCATION_ID    ADDRESS                  POSTAL_CODE    STATE        
+            10 6092 Boxwood St          YSW 9T2        Yukon        
+            19 Rua Frei Caneca 1360     01307-002      Sao Paulo    
+
+SQL> 
+SQL> -- Question 7.
+SQL> SELECT
+  2      cu.name
+  3    , cu.credit_limit
+  4    , COUNT(od.customer_id) AS "NUMBER_OF_ORDERS"
+  5  FROM
+  6           ot.customers cu
+  7      INNER JOIN ot.orders od
+  8      ON od.customer_id = cu.customer_id
+  9  WHERE
+ 10      cu.credit_limit = 600
+ 11  GROUP BY
+ 12      ROLLUP(cu.name
+ 13           , cu.credit_limit)
+ 14  HAVING
+ 15      GROUPING_ID(cu.name, cu.credit_limit) != 1;
+
+NAME              CREDIT_LIMIT    NUMBER_OF_ORDERS    
+Southern                      600                   5 
+General Mills                 600                   5 
+NextEra Energy                600                   5 
+                                                   15 
+
+SQL> 
+SQL> SPOOL OFF;
