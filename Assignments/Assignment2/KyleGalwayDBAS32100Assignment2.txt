@@ -1,0 +1,145 @@
+SQL> -- KyleGalwayDBAS32100Assignment2.sql
+SQL> -- Kyle Galway 
+SQL> -- s6_galwayk
+SQL> 
+SQL> -- Question 1.  Show the first name, last name, and level of all managers to 
+SQL> -- whom Mohammad Peterson reports to, but not Mohammad Peterson himself. 
+SQL> SELECT
+  2      first_name
+  3    , last_name
+  4    , manager_id
+  5    , level
+  6  FROM
+  7      ot.employees
+  8  WHERE
+  9      level != 1
+ 10  START WITH
+ 11      lower(first_name || last_name) = 'mohammadpeterson'
+ 12  CONNECT BY
+ 13      PRIOR manager_id = employee_id;
+
+FIRST_NAME    LAST_NAME    MANAGER_ID    LEVEL    
+Jude          Rivera                   1        2 
+Tommy         Bailey                            3 
+
+SQL> 
+SQL> -- Question 2. For each product ID that has a value between 10 and 20, show the 
+SQL> -- product name, category name, and the number of products from its category.
+SQL> SELECT DISTINCT
+  2      product_id
+  3    , product_name
+  4    , category_name
+  5    , COUNT(product_name)
+  6        OVER(PARTITION BY category_name) AS category_count
+  7  FROM
+  8           ot.products p
+  9      INNER JOIN ot.product_categories c
+ 10      ON p.category_id = c.category_id
+ 11  WHERE
+ 12      product_id BETWEEN 10 AND 20
+ 13  ORDER BY
+ 14      category_name;
+
+PRODUCT_ID    PRODUCT_NAME                      CATEGORY_NAME    CATEGORY_COUNT    
+           16 Intel Core i7-6900K               CPU                              2 
+           19 Intel Core i7-6950X (OEM/Tray)    CPU                              2 
+           20 Corsair Dominator Platinum        Storage                          7 
+           17 Corsair Vengeance LPX             Storage                          7 
+           10 Crucial                           Storage                          7 
+           18 Crucial                           Storage                          7 
+           13 G.Skill Ripjaws V Series          Storage                          7 
+           14 G.Skill Ripjaws V Series          Storage                          7 
+           15 G.Skill Trident Z                 Storage                          7 
+           12 Gigabyte GV-N108TAORUSX W-11GD    Video Card                       2 
+           11 PNY VCQP5000-PB                   Video Card                       2 
+
+11 rows selected. 
+
+SQL> 
+SQL> -- Question 3. Show the customer name and order price of each order the customer
+SQL> -- has placed, as well as the total cumulative order price for Oct 2nd, 2016.
+SQL> SELECT
+  2      cu.name
+  3    , oi.quantity * oi.unit_price AS order_price
+  4    , SUM(oi.quantity * oi.unit_price)
+  5        OVER(
+  6          ORDER BY
+  7              cu.name
+  8          ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+  9        )                           AS cumulative_price
+ 10  FROM
+ 11           ot.orders od
+ 12      INNER JOIN ot.customers   cu
+ 13      ON od.customer_id = cu.customer_id
+ 14      INNER JOIN ot.order_items oi
+ 15      ON oi.order_id = od.order_id
+ 16      INNER JOIN ot.products    pr
+ 17      ON pr.product_id = od.order_id
+ 18  WHERE
+ 19      od.order_date = '02_OCT_2016';
+
+NAME                ORDER_PRICE    CUMULATIVE_PRICE    
+ConAgra Foods             40664.61            40664.61 
+Freeport-McMoRan          37282.96            77947.57 
+Gap                        5164.77            83112.34 
+Sempra Energy             43583.36            126695.7 
+Sempra Energy             25499.66           152195.36 
+
+SQL> 
+SQL> -- Question 4. Select the first name, last name, and hire date of the employees
+SQL> -- that come in third place in experience of the company.
+SQL> WITH employee_hire_dates AS (
+  2      SELECT
+  3          first_name
+  4        , last_name
+  5        , hire_date
+  6        , DENSE_RANK()
+  7            OVER(
+  8              ORDER BY
+  9                  hire_date
+ 10            ) AS date_rank
+ 11      FROM
+ 12          ot.employees
+ 13  )
+ 14  SELECT
+ 15      first_name
+ 16    , last_name
+ 17    , hire_date
+ 18  FROM
+ 19      employee_hire_dates
+ 20  WHERE
+ 21      date_rank = 3;
+
+FIRST_NAME    LAST_NAME    HIRE_DATE    
+Ella          Wallace      05_JAN_16    
+
+SQL> 
+SQL> -- Question 5. Select the product ID, product name, and the list price of the 
+SQL> -- second more expensive product.
+SQL> WITH product_prices AS (
+  2      SELECT
+  3          product_id
+  4        , product_name
+  5        , list_price
+  6        , RANK()
+  7            OVER(
+  8              ORDER BY
+  9                  list_price DESC
+ 10            ) AS price_rank
+ 11      FROM
+ 12          ot.products
+ 13  )
+ 14  SELECT
+ 15      product_id
+ 16    , product_name
+ 17    , list_price
+ 18  FROM
+ 19      product_prices
+ 20  WHERE
+ 21      price_rank = 2;
+
+PRODUCT_ID    PRODUCT_NAME       LIST_PRICE    
+          133 PNY VCQP6000-PB          5499.99 
+
+SQL> 
+SQL> SPOOL OFF;
