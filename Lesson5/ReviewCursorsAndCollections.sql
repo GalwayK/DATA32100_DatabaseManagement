@@ -1,0 +1,127 @@
+SET SERVEROUTPUT ON;
+
+--DECLARE 
+--    v_name hr.employees.first_name%TYPE;
+--BEGIN 
+--    SELECT 
+--        first_name 
+--    INTO 
+--        v_name
+--    FROM
+--        hr.employees 
+--    WHERE 
+--        employee_id = 100;
+--    DBMS_OUTPUT.PUT_LINE('Number of Rows: ' || SQL%ROWCOUNT);
+--    DBMS_OUTPUT.PUT_LINE('Employee Name: ' || v_name);
+--END; 
+
+--CREATE TABLE my_customers AS SELECT 
+--    * 
+--FROM 
+--    ot.customers;
+--ACCEPT p_id PROMPT 'Enter customer ID: ';
+--DECLARE 
+--    v_total_rows NUMBER; 
+--BEGIN
+--    UPDATE my_customers 
+--    SET 
+--        credit_limit = 2000
+--    WHERE 
+--        customer_id = &p_id;
+--        
+--    IF SQL%NOTFOUND THEN 
+--        DBMS_OUTPUT.PUT_LINE('No customer selected.');
+--    ELSE 
+--        DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || ' rows affected!');
+--    END IF;
+--END;
+--/
+
+--DECLARE 
+--    CURSOR emp_cursor IS SELECT 
+--        employee_id,
+--        first_name, 
+--        last_name
+--    FROM 
+--        hr.employees;
+--    TYPE employee IS RECORD (
+--        employee_id hr.employees.employee_id%TYPE,
+--        first_name hr.employees.first_name%TYPE, 
+--        last_name hr.employees.last_name%TYPE);
+--    r_employee employee;
+--BEGIN
+--    OPEN emp_cursor;
+--    LOOP
+--        FETCH emp_cursor into r_employee;
+--        EXIT WHEN emp_cursor%NOTFOUND;
+--        DBMS_OUTPUT.PUT_LINE('Employee ID: ' || r_employee.employee_id || 'Name: ' || r_employee.first_name || ' ' || r_employee.last_name);
+--    END LOOP;
+--    CLOSE emp_cursor;
+--END;
+--/
+--
+--DECLARE 
+--    v_name VARCHAR(41);
+--    v_total NUMBER(10, 2);
+--    v_num_orders NUMBER(10, 2); 
+--    v_grandtotal NUMBER(10, 2);
+--    CURSOR cust_orders IS SELECT 
+--        cust_first_name || ' ' || cust_last_name as name,
+--        sum(quantity * unit_price) as total, 
+--        count(o.order_id) as number_of_orders
+--    FROM
+--        oe.customers c
+--    JOIN 
+--        oe.orders o 
+--    ON 
+--        c.customer_id = o.customer_id
+--    JOIN 
+--        oe.order_items oi 
+--    ON
+--        o.order_id = oi.order_id
+--    GROUP BY 
+--        cust_first_name || ' ' || cust_last_name;
+--    
+--BEGIN 
+--    v_grandtotal := 0;
+--    OPEN cust_orders;
+--    LOOP
+--        FETCH cust_orders into v_name, v_total, v_num_orders;
+--        EXIT WHEN cust_orders%NOTFOUND;
+--        v_grandtotal := v_grandtotal + v_total;
+--        DBMS_OUTPUT.PUT_LINE(v_name || ' ' || to_char(v_total, '99999.99') || ' ' || v_num_orders);
+--    END LOOP;
+--    CLOSE cust_orders;
+--    DBMS_OUTPUT.PUT_LINE('Grand Total: ' || v_grandtotal);
+--END;
+--/
+
+--DECLARE  
+--    v_grandtotal NUMBER(10, 2);
+--    CURSOR cust_orders IS SELECT 
+--        cust_first_name || ' ' || cust_last_name as name,
+--        sum(quantity * unit_price) as total, 
+--        count(o.order_id) as number_of_orders
+--    FROM
+--        oe.customers c
+--    JOIN 
+--        oe.orders o 
+--    ON 
+--        c.customer_id = o.customer_id
+--    JOIN 
+--        oe.order_items oi 
+--    ON
+--        o.order_id = oi.order_id
+--    GROUP BY 
+--        cust_first_name || ' ' || cust_last_name;
+--    
+--BEGIN 
+--    v_grandtotal := 0;
+--    
+--    FOR v_order in cust_orders LOOP
+--        v_grandtotal := v_grandtotal + v_order.total;
+--        DBMS_OUTPUT.PUT_LINE(v_order.name || ' ' || to_char(v_order.total, '99999.99') || ' ' || v_order.number_of_orders);
+--    END LOOP;
+--    DBMS_OUTPUT.PUT_LINE('Grand Total: ' || v_grandtotal);
+--END;
+

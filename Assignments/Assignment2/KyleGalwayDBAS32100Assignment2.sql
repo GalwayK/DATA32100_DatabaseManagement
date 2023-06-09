@@ -84,6 +84,25 @@ FROM
     employee_hire_dates
 WHERE
     date_rank = 3;
+    
+WITH employee_hire_dates AS (
+    SELECT
+        first_name
+      , last_name
+      , hire_date
+      , NTH_VALUE(hire_date, 3) FROM FIRST
+          OVER(ORDER BY hire_date
+          ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS date_rank
+    FROM
+        ot.employees
+)
+SELECT
+    first_name
+  , last_name
+  , hire_date
+  , date_rank
+FROM
+    employee_hire_dates;
 
 -- Question 5. Select the product ID, product name, and the list price of the 
 -- second more expensive product.

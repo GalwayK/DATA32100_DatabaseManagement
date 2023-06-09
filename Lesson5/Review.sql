@@ -1,0 +1,175 @@
+SET SERVEROUTPUT ON;
+--    ACCEPT p_name PROMPT 'Please enter your name: ';
+--    VARIABLE g_name VARCHAR(255);
+--DECLARE 
+--    g_name VARCHAR(255) := 'Neil Gaiman';
+--BEGIN 
+--    :g_name := '&p_name';
+--    DBMS_OUTPUT.PUT('My fav author is ' || g_name || CHR(10));
+--    DBMS_OUTPUT.PUT_LINE('My name is ' || :g_name);
+--END; 
+--/
+
+--DECLARE 
+--    v_number NUMBER := 1;
+--BEGIN 
+--    LOOP
+--        DBMS_OUTPUT.PUT_LINE('Current iteration is ' || (v_number));
+--        v_number := v_number + 1;
+--        EXIT WHEN v_number > 5;
+--    END LOOP;
+--END; 
+--/
+
+--DECLARE 
+--    v_number NUMBER := 1;
+--BEGIN 
+--    WHILE v_number <= 5 LOOP
+--        DBMS_OUTPUT.PUT_LINE('Current iteration is ' || (v_number));
+--        v_number := v_number + 1;
+--    END LOOP;
+--END; 
+--/
+
+--
+--DECLARE 
+--    v_number NUMBER := 1;
+--BEGIN 
+--    FOR i in 1..5 LOOP
+--        DBMS_OUTPUT.PUT_LINE('Current iteration is ' || (i));
+--    END LOOP;
+--END; 
+--/
+--PROMPT p_employee_id ACCEPT 'Please enter an employee ID: ';
+--
+--DECLARE 
+--    v_first_name hr.employees.first_name%TYPE;
+--    v_last_name hr.employees.last_name%TYPE;
+--    v_email hr.employees.email%TYPE;
+--    v_phone hr.employees.phone_number%TYPE; 
+--    v_salary hr.employees.salary%TYPE;
+--    v_employee_id hr.employees.employee_id%TYPE;
+--BEGIN 
+--    v_employee_id := '&p_employee_id';
+--    SELECT
+--        first_name, 
+--        last_name, 
+--        email, 
+--        phone_number, 
+--        salary 
+--    INTO
+--        v_first_name, 
+--        v_last_name, 
+--        v_email, 
+--        v_phone,
+--        v_salary
+--    FROM 
+--        hr.employees
+--    WHERE 
+--        employee_id = v_employee_id;
+--        
+--        DBMS_OUTPUT.PUT_LINE(v_first_name || CHR(32) || v_last_name ||  
+--                        CHR(10) || 'Email: ' || v_email ||         
+--                        CHR(10) || 'Phone No: ' || v_phone || 
+--                        CHR(10) || 'Salary: ' || v_salary);
+--END;
+--/
+
+--PROMPT p_employee_id ACCEPT 'Please enter an employee ID: ';
+--DECLARE 
+--    r_employee hr.employees%ROWTYPE;
+--    v_employee_id hr.employees.employee_id%TYPE;
+--BEGIN 
+--    v_employee_id := '&p_employee_id';
+--    SELECT
+--        *
+--    INTO
+--        r_employee
+--    FROM 
+--        hr.employees
+--    WHERE 
+--        employee_id = v_employee_id;
+--        
+--        DBMS_OUTPUT.PUT_LINE(r_employee.first_name || CHR(32) || r_employee.last_name ||  
+--                        CHR(10) || 'Email: ' || r_employee.email ||         
+--                        CHR(10) || 'Phone No: ' || r_employee.phone_number || 
+--                        CHR(10) || 'Salary: ' || r_employee.salary);
+--END;
+--/
+
+--PROMPT p_employee_id ACCEPT 'Please enter an employee ID: ';
+--DECLARE 
+--    TYPE employee_record IS RECORD 
+--    (employee_id hr.employees.employee_id%TYPE,
+--    full_name hr.employees.first_name%TYPE, 
+--    email hr.employees.email%TYPE, 
+--    phone_number hr.employees.phone_number%TYPE, 
+--    salary hr.employees.salary%TYPE);
+--    
+--    r_employee employee_record;
+--    v_employee_id hr.employees.employee_id%TYPE;
+--BEGIN 
+--    v_employee_id := '&p_employee_id';
+--    SELECT
+--        employee_id,
+--        first_name || ' ' || last_name as full_name, 
+--        email, 
+--        phone_number, 
+--        salary
+--    INTO
+--        r_employee
+--    FROM 
+--        hr.employees
+--    WHERE 
+--        employee_id = v_employee_id;
+--        
+--        DBMS_OUTPUT.PUT_LINE(r_employee.full_name ||  
+--                        CHR(10) || 'Email: ' || r_employee.email ||         
+--                        CHR(10) || 'Phone No: ' || r_employee.phone_number || 
+--                        CHR(10) || 'Salary: ' || r_employee.salary);
+--END;
+--/
+--PROMPT p_customer_id ACCEPT 'Please enter the customer ID';
+--
+--DECLARE 
+--    r_customer oe.customers%ROWTYPE;
+--    v_customer_id oe.customers.customer_id%TYPE := &p_customer_id;
+--BEGIN 
+--    SELECT 
+--        * 
+--    INTO 
+--        r_customer
+--    FROM 
+--        oe.customers 
+--    WHERE 
+--        customer_id = v_customer_id;
+--        
+--    DBMS_OUTPUT.PUT_LINE(r_customer.cust_first_name || ' ' || r_customer.cust_last_name || ' has a credit limit of ' || r_customer.credit_limit || '.' );
+--END;
+--/
+--PROMPT p_number_one ACCEPT 'Please enter an integer: ';
+--
+--DECLARE 
+--    v_number_one NUMBER := &p_number_one;
+--    v_output VARCHAR(255);
+--BEGIN 
+--    CASE v_number_one MOD 2
+--        WHEN 1 THEN 
+--            v_output := ' is odd.';
+--        WHEN 0 THEN 
+--            v_output := ' is even.';
+--    END CASE;
+--    DBMS_OUTPUT.PUT_LINE('The number' || v_output);
+--END; 
+
+PROMPT p_number ACCEPT 'Please enter a number: ';
+--DECLARE 
+--    v_number NUMBER := &p_number;
+--    v_factorial NUMBER := 0;
+--BEGIN 
+--    FOR i in 1..v_number LOOP
+--    v_factorial := v_factorial + i;
+--    
+--    END LOOP;
+--    DBMS_OUTPUT.PUT_LINE('The factorial is ' || v_factorial);
+--END; 
