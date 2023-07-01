@@ -1,4 +1,247 @@
-SET SERVEROUTPUT ON 
+SET SERVEROUTPUT ON
+
+DECLARE
+    v_count NUMBER(2) := 0;
+BEGIN
+    WHILE(v_count < 5)
+    LOOP
+      DBMS_OUTPUT.PUT(v_count || CHR(9));
+    END LOOP;
+    DBMS_OUTPUT.NEW_LINE();
+END;
+/
+
+
+--
+--ACCEPT p_salary prompt 'Please enter a salary: ';
+--
+--DECLARE 
+--    TYPE r_employee IS RECORD
+--    (first_name hr.employees.first_name%TYPE, 
+--    last_name hr.employees.last_name%TYPE, 
+--    salary hr.employees.salary%TYPE);
+--    
+--    v_employee r_employee;
+--    TYPE arr_employees is VARRAY(107) OF r_employee;
+--    v_arr_employees arr_employees := arr_employees();
+--BEGIN 
+--    SELECT 
+--        first_name,
+--        last_name, 
+--        salary
+--    BULK COLLECT INTO 
+--        v_arr_employees
+--    FROM 
+--        hr.employees 
+--    WHERE 
+--        salary = '&p_salary';
+--        
+--     DBMS_OUTPUT.PUT_LINE('Printing ' || SQL%ROWCOUNT || CHR(32) || 'employees!');
+--    FOR i in 1..v_arr_employees.COUNT LOOP 
+--        DBMS_OUTPUT.PUT_LINE('Name: ' || v_arr_employees(i).first_name 
+--            || CHR(32) || v_arr_employees(i).last_name 
+--            || CHR(32) || v_arr_employees(i).salary );
+--    END LOOP;
+--EXCEPTION
+--    WHEN OTHERS THEN 
+--        DBMS_OUTPUT.PUT_LINE('An unexpected error has occured: ' || SQLERRM);
+--END;
+--/
+
+--PROMPT p_employee_salary ACCEPT 'Please enter a salary: ';
+--PROMPT p_employee_name ACCEPT 'Please enter the employee's new name: ';
+--
+--DECLARE 
+--    v_employee employees_copy%ROWTYPE;
+--    v_employee_salary employees_copy.employee_id%TYPE;
+--    v_employee_name employees_copy.first_name%TYPE;
+--    AMBIGUOUS_UPDATE EXCEPTION;
+--    INVALID_INPUT EXCEPTION;
+--    
+--    CURSOR c_select_employee IS 
+--    SELECT 
+--        e.*
+--    INTO 
+--        v_employee
+--    FROM 
+--        employees_copy e
+--    WHERE 
+--        salary = v_employee_salary;
+--
+--BEGIN     
+--    v_employee_salary := '&p_employee_salary';
+--    v_employee_name := '&p_employee_name';
+--    
+--    OPEN c_select_employee;
+--    
+--    IF c_select_employee%NOTFOUND THEN 
+--        RAISE NO_DATA_FOUND;
+--    ELSIF c_select_employee%ROWCOUNT > 0 THEN
+--        DBMS_OUTPUT.PUT_LINE('Selected and updating customer!');
+--    END IF;
+--    
+--    CLOSE c_select_employee;
+--    
+--    UPDATE 
+--        employees_copy 
+--    SET 
+--        first_name = v_employee_name 
+--    WHERE 
+--        salary = v_employee_salary;
+--        
+--    FOR v_employee IN c_select_employee LOOP 
+--        DBMS_OUTPUT.PUT_LINE('Printing Employee: '
+--        || CHR(32) || 'Name: ' || v_employee.first_name 
+--        || CHR(32) || v_employee.last_name 
+--        || CHR(10) || 'Email: ' || v_employee.email 
+--        || CHR(10) || 'Phone: ' || v_employee.phone_number
+--        || CHR(10) || 'Salary: ' || v_employee.salary
+--        || CHR(10));
+--    END LOOP;
+--
+--EXCEPTION 
+--        WHEN NO_DATA_FOUND THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: Employee ID not found!');
+--    WHEN INVALID_INPUT OR VALUE_ERROR THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: Please enter a valid employee ID!');
+--    WHEN AMBIGUOUS_UPDATE THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: Cannot update because of ambigious ID!');
+--    WHEN OTHERS THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+--END;
+--/
+    
+--PROMPT p_employee_id ACCEPT 'Please enter an employee ID: ';
+--PROMPT p_employee_name ACCEPT 'Please enter the employee's new name: ';
+--
+--CREATE TABLE 
+--    employees_copy
+--AS SELECT 
+--    * 
+--FROM 
+--    hr.employees;
+--
+--DECLARE 
+--    v_employee employees_copy%ROWTYPE;
+--    v_employee_id employees_copy.employee_id%TYPE;
+--    v_employee_name employees_copy.first_name%TYPE;
+--    AMBIGUOUS_UPDATE EXCEPTION;
+--    INVALID_INPUT EXCEPTION;
+--    
+--    CURSOR c_select_employee IS 
+--    SELECT 
+--        e.*
+--    INTO 
+--        v_employee
+--    FROM 
+--        employees_copy e
+--    WHERE 
+--        employee_id = v_employee_id;
+--
+--BEGIN     
+--    v_employee_id := '&p_employee_id';
+--    v_employee_name := '&p_employee_name';
+--    
+--    OPEN c_select_employee;
+--    
+--    IF c_select_employee%NOTFOUND THEN 
+--        RAISE NO_DATA_FOUND;
+--    ELSIF c_select_employee%ROWCOUNT = 1 THEN
+--        DBMS_OUTPUT.PUT_LINE('Selected and updating customer!');
+--    END IF;
+--    
+--    CLOSE c_select_employee;
+--    
+--    UPDATE 
+--        employees_copy 
+--    SET 
+--        first_name = v_employee_name 
+--    WHERE 
+--        employee_id = v_employee_id;
+--        
+--    OPEN c_select_employee;
+--    
+--    FETCH c_select_employee INTO v_employee;
+--    
+--    DBMS_OUTPUT.PUT_LINE('Rowcount: ' || c_select_employee%ROWCOUNT
+--        || CHR(32) || 'Name: ' || v_employee.first_name 
+--        || CHR(32) || v_employee.last_name 
+--        || CHR(10) || 'Email: ' || v_employee.email 
+--        || CHR(10) || 'Phone: ' || v_employee.phone_number
+--        || CHR(10) || 'Salary: ' || v_employee.salary);
+--        
+--    CLOSE c_select_employee;
+--EXCEPTION 
+--        WHEN NO_DATA_FOUND THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: Employee ID not found!');
+--    WHEN INVALID_INPUT OR VALUE_ERROR THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: Please enter a valid employee ID!');
+--    WHEN AMBIGUOUS_UPDATE THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: Cannot update because of ambigious ID!');
+--    WHEN OTHERS THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+--END;
+--/
+
+--
+--PROMPT p_employee_id ACCEPT 'Please enter an employee's ID: '
+--
+--DECLARE 
+--    v_employee_id hr.employees.employee_id%TYPE;
+--    
+--    TYPE r_employee IS RECORD 
+--    (employee_id hr.employees.employee_id%TYPE,
+--    first_name hr.employees.first_name%TYPE,
+--    last_name hr.employees.last_name%TYPE, 
+--    email hr.employees.email%TYPE, 
+--    phone_number hr.employees.phone_number%TYPE, 
+--    salary hr.employees.salary%TYPE);
+--    
+--    v_employee r_employee;
+--    
+--    INVALID_INPUT EXCEPTION;
+--BEGIN 
+--    v_employee_id := '&p_employee_id';
+--    
+--    IF v_employee_id < 1 THEN 
+--        RAISE INVALID_INPUT;
+--    END IF; 
+--    
+--    SELECT 
+--        employee_id, 
+--        first_name, 
+--        last_name, 
+--        email, 
+--        phone_number, 
+--        salary
+--    INTO 
+--        v_employee
+--    FROM 
+--        hr.employees e
+--    WHERE 
+--        employee_id = v_employee_id;
+--
+--    DBMS_OUTPUT.PUT_LINE('Name: ' || v_employee.first_name 
+--        || CHR(32) || v_employee.last_name 
+--        || CHR(10) || 'Email: ' || v_employee.email 
+--        || CHR(10) || 'Phone: ' || v_employee.phone_number
+--        || CHR(10) || 'Salary: ' || v_employee.salary);
+--EXCEPTION 
+--    WHEN NO_DATA_FOUND THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: Employee ID not found!');
+--    WHEN INVALID_INPUT OR VALUE_ERROR THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: Please enter a valid employee ID!');
+--    WHEN OTHERS THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+--END;
+--/
+
+--BEGIN 
+--    for i in REVERSE 1..5 LOOP
+--        DBMS_OUTPUT.PUT_LINE('Loop counter: ' || i);
+--    END LOOP;
+--END;
+--/
 -- Question 1. Use a cursor to print the average list price of each product 
 -- category in product information of the OE schema. 
 
@@ -204,44 +447,44 @@ prompt p_salary accept 'Please enter a salary: '
 --/
 
 -- Question 5. Search for numerous employees with salary
-prompt p_salary accept 'Please enter a salary: ';
-DECLARE 
-    TYPE arr_employees IS TABLE OF hr.employees%ROWTYPE;
-    v_arr_employees arr_employees;
-    v_salary NUMBER := '&p_salary';
-    INVALID_INPUT EXCEPTION;
-BEGIN 
-    IF v_salary < 0 THEN 
-        RAISE INVALID_INPUT;
-    END IF;
-
-    SELECT 
-        * 
-    BULK COLLECT INTO 
-        v_arr_employees
-    FROM 
-        hr.employees 
-    WHERE
-        salary = v_salary;
-    IF v_arr_employees.COUNT = 0 THEN
-        RAISE NO_DATA_FOUND;
-    END IF;
-    
-    DBMS_OUTPUT.PUT_LINE('Printing Employees with salary of ' || v_salary || '!');
-    FOR i in 1..v_arr_employees.COUNT LOOP
-            DBMS_OUTPUT.PUT_LINE(v_arr_employees(i).first_name || CHR(32) || v_arr_employees(i).last_name || ' has a salary of ' || v_salary);
-    END LOOP;
-    
-EXCEPTION 
-    WHEN TOO_MANY_ROWS THEN 
-        DBMS_OUTPUT.PUT_LINE('Error: Too many rows returned!');
-    WHEN NO_DATA_FOUND THEN 
-        DBMS_OUTPUT.PUT_LINE('Error: No employee with matching salary!');
-    WHEN INVALID_INPUT THEN 
-        DBMS_OUTPUT.PUT_LINE('Error: Salary must be positive!');
-    WHEN VALUE_ERROR THEN 
-        DBMS_OUTPUT.PUT_LINE('Error: Salary must be a number!');
-    WHEN OTHERS THEN 
-        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
-END;
-/
+-- prompt p_salary accept 'Please enter a salary: ';
+--DECLARE 
+--    TYPE arr_employees IS TABLE OF hr.employees%ROWTYPE;
+--    v_arr_employees arr_employees;
+--    v_salary NUMBER := '&p_salary';
+--    INVALID_INPUT EXCEPTION;
+--BEGIN 
+--    IF v_salary < 0 THEN 
+--        RAISE INVALID_INPUT;
+--    END IF;
+--
+--    SELECT 
+--        * 
+--    BULK COLLECT INTO 
+--        v_arr_employees
+--    FROM 
+--        hr.employees 
+--    WHERE
+--        salary = v_salary;
+--    IF v_arr_employees.COUNT = 0 THEN
+--        RAISE NO_DATA_FOUND;
+--    END IF;
+--    
+--    DBMS_OUTPUT.PUT_LINE('Printing Employees with salary of ' || v_salary || '!');
+--    FOR i in 1..v_arr_employees.COUNT LOOP
+--            DBMS_OUTPUT.PUT_LINE(v_arr_employees(i).first_name || CHR(32) || v_arr_employees(i).last_name || ' has a salary of ' || v_salary);
+--    END LOOP;
+--    
+--EXCEPTION 
+--    WHEN TOO_MANY_ROWS THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: Too many rows returned!');
+--    WHEN NO_DATA_FOUND THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: No employee with matching salary!');
+--    WHEN INVALID_INPUT THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: Salary must be positive!');
+--    WHEN VALUE_ERROR THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: Salary must be a number!');
+--    WHEN OTHERS THEN 
+--        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+--END;
+--/
