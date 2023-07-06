@@ -1,0 +1,303 @@
+-- KyleGalwayDBAS32100Assignment3-1.sql
+-- Kyle Galway 
+-- s6_galwayk
+
+-- Question 1. Create a stored procedure that can be used to find the order 
+-- count and the total money a customer has spent on all of their orders.
+
+SET SERVEROUTPUT ON;
+SET VER OFF;
+
+CREATE OR REPLACE PROCEDURE count_customer_orders (
+    pl_customer_name IN VARCHAR2
+  , total_orders     OUT NUMBER
+  , total_price      OUT NUMBER
+) AS
+BEGIN
+    SELECT
+        COUNT(DISTINCT o.order_id)
+      , SUM(oi.unit_price)
+    INTO
+        total_orders
+    , total_price
+    FROM
+             ot.orders o
+        INNER JOIN ot.order_items oi
+        ON o.order_id = oi.order_id
+        INNER JOIN ot.customers   c
+        ON o.customer_id = c.customer_id
+    WHERE
+        lower(name) = lower(pl_customer_name)
+    GROUP BY
+        name;
+
+END;
+/
+
+ACCEPT p_customer_name PROMPT 'Please enter your name: ';
+variable q_customer_name VARCHAR(255);
+
+DECLARE
+    -- v_customer_name VARCHAR2(255) := '&p_customer_name';
+    v_total_orders NUMBER;
+    v_total_price  NUMBER;
+BEGIN
+    :q_customer_name := '&p_customer_name';
+    count_customer_orders(:q_customer_name, v_total_orders, v_total_price);
+    dbms_output.put_line('Customer: '
+                         || :q_customer_name
+                         || chr(9)
+                         || 'Total Orders: '
+                         || v_total_orders
+                         || '    '
+                         || 'Total Price: '
+                         || v_total_price);
+
+EXCEPTION
+    WHEN no_data_found THEN
+        dbms_output.put_line('The customer '
+                             || :q_customer_name
+                             || ' has placed no orders!');
+    WHEN OTHERS THEN
+        dbms_output.put_line('Error: ' || sqlerrm);
+END;
+/
+
+Output: 
+
+Procedure COUNT_CUSTOMER_ORDERS compiled
+
+Usage: VAR[IABLE] [ <variable> [ NUMBER | CHAR | CHAR (n [CHAR|BYTE]) |
+    VARCHAR2 (n [CHAR|BYTE]) | NCHAR | NCHAR (n) |
+    NVARCHAR2 (n) | CLOB | NCLOB | BLOB | BFILE
+    REFCURSOR | BINARY_FLOAT | BINARY_DOUBLE ] ] 
+Customer: AbbVie	Total Orders: 4    Total Price: 21438.86
+
+
+-- KyleGalwayDBAS32100Assignment3-2.sql
+-- Kyle Galway 
+-- s6_galwayk
+
+
+-- Question 2. Write an anonymous block that will prompt a user to enter the 
+-- abbreviation of their state and then use the procedure in question 1 to 
+-- display the customer name, number of orders, and total amount spent by 
+-- each customer of that state ONLY IF that customer has placed any orders.
+
+SET SERVEROUTPUT ON;
+SET VER OFF;
+
+ACCEPT p_state_initials PROMPT 'Please enter the intials of a state';
+
+DECLARE
+    v_state_initials     VARCHAR(20) := '&p_state_initials';
+    too_many_characters EXCEPTION;
+    no_customers_found EXCEPTION;
+    TYPE arr_customer_names IS
+        TABLE OF ot.customers.name%TYPE;
+    v_arr_customer_names arr_customer_names;
+    v_total_orders       NUMBER;
+    v_total_price        NUMBER;
+BEGIN
+    IF length(v_state_initials) > 2 THEN
+        RAISE too_many_characters;
+    END IF;
+    SELECT DISTINCT
+        name
+    BULK COLLECT
+    INTO v_arr_customer_names
+    FROM
+             ot.customers c
+        INNER JOIN ot.orders o
+        ON c.customer_id = o.customer_id
+    WHERE
+        lower(address) LIKE lower('%' || v_state_initials);
+
+    IF v_arr_customer_names.count = 0 THEN
+        RAISE no_customers_found;
+    END IF;
+    FOR i IN 1..v_arr_customer_names.count LOOP
+        count_customer_orders(v_arr_customer_names(i), v_total_orders, v_total_price);
+        dbms_output.put_line('Customer: '
+                             || v_arr_customer_names(i)
+                             || chr(9)
+                             || 'Total Orders: '
+                             || v_total_orders
+                             || '    '
+                             || 'Total Price: '
+                             || v_total_price);
+
+    END LOOP;
+
+EXCEPTION
+    WHEN too_many_characters THEN
+        dbms_output.put_line('Error: Invalid State Initials');
+    WHEN no_customers_found THEN
+        dbms_output.put_line('No customers have placed an order in the selected state!');
+    WHEN OTHERS THEN
+        dbms_output.put_line('Error: ' || sqlerrm);
+END;
+/
+
+Output when p_state_initials = 'IN':
+
+Customer: AbbVie	Total Orders: 4    Total Price: 21438.86
+Customer: International Paper	Total Orders: 4    Total Price: 26891.26
+Customer: Emerson Electric	Total Orders: 4    Total Price: 32952.02
+Customer: Centene	Total Orders: 4    Total Price: 10962.16
+Customer: Raytheon	Total Orders: 4    Total Price: 26822.64
+Customer: Community Health Systems	Total Orders: 4    Total Price: 20034.72
+Customer: US Foods Holding	Total Orders: 4    Total Price: 9750.88
+Customer: Alcoa	Total Orders: 4    Total Price: 21040.97
+Customer: Plains GP Holdings	Total Orders: 4    Total Price: 23965.65
+
+Output when p_state_initials = 'PA':
+
+No customers have placed an order in the selected state!
+
+Output when p_state_initials = 'California':
+
+Error: Invalid State Initials
+
+
+-- KyleGalwayDBAS32100Assignment3-3.sql
+-- Kyle Galway 
+-- s6_galwayk
+
+-- Question 3. Write a function that takes a category name as a parameter and 
+-- returns the number of products which are contained in that category.
+
+SET SERVEROUTPUT ON;
+SET VER OFF;
+
+CREATE OR REPLACE FUNCTION count_category_products (
+    pl_category_name VARCHAR2
+) RETURN NUMBER AS
+    v_category_count NUMBER;
+BEGIN
+    SELECT
+        COUNT(category_name)
+    INTO v_category_count
+    FROM
+             ot.product_categories c
+        INNER JOIN ot.products p
+        ON c.category_id = p.category_id
+    WHERE
+        lower(category_name) = lower(pl_category_name);
+
+    RETURN v_category_count;
+END;
+/
+
+Output: 
+
+Function COUNT_CATEGORY_PRODUCTS compiled
+
+
+-- KyleGalwayDBAS32100Assignment3-4.sql
+-- Kyle Galway 
+-- s6_galwayk
+
+-- Question 4. Write an anonymous block that will prompt a category name and use
+-- the function in question 3 to print the number of products in the category.
+
+SET SERVEROUTPUT ON;
+SET VER OFF;
+
+ACCEPT p_category_name PROMPT 'Please enter a category name: ';
+
+DECLARE
+    v_category_name  ot.product_categories.category_name%TYPE := '&p_category_name';
+    v_category_count NUMBER;
+BEGIN
+    SELECT
+        nvl(count_category_products(category_name)
+          , 0)
+    INTO v_category_count
+    FROM
+        ot.product_categories
+    WHERE
+        lower(category_name) = lower(v_category_name);
+
+    dbms_output.put_line('Category '
+                         || v_category_name
+                         || ' contains '
+                         || v_category_count
+                         || ' products.');
+
+EXCEPTION
+    WHEN no_data_found THEN
+        dbms_output.put_line('Error: Category does not exist!');
+    WHEN OTHERS THEN
+        dbms_output.put_line('Error' || sqlerrm);
+END;
+/
+
+Output when p_category_name = 'CPU': 
+
+Category CPU contains 70 products.
+
+Output when p_category_name = 'Mother board': 
+
+Category Mother board contains 60 products.
+
+Output when p_category_name = 'RAM'
+
+Category RAM contains 0 products.
+
+Output when p_category_name = 'Case'
+
+Error: Category does not exist!
+
+
+-- KyleGalwayDBAS32100Assignment3-5.sql
+-- Kyle Galway 
+-- s6_galwayk
+
+-- Question 5. Return the product count for all categories using the function
+-- created in question 3.
+
+SET SERVEROUTPUT ON;
+SET VER OFF;
+
+DECLARE
+    no_categories_found EXCEPTION;
+    CURSOR c_category_data IS
+    SELECT
+        category_name
+      , nvl(count_category_products(category_name)
+            , 0) AS product_count
+    FROM
+        ot.product_categories
+    GROUP BY
+        category_name;
+
+BEGIN
+    OPEN c_category_data;
+    IF c_category_data%notfound THEN
+        RAISE no_categories_found;
+    END IF;
+    CLOSE c_category_data;
+    FOR category_data IN c_category_data LOOP
+        dbms_output.put_line(category_data.category_name
+                             || ': '
+                             || category_data.product_count);
+    END LOOP;
+
+EXCEPTION
+    WHEN no_data_found THEN
+        dbms_output.put_line('Error: Category does not exist!');
+    WHEN no_categories_found THEN
+        dbms_output.put_line('Error: No categories found!');
+    WHEN OTHERS THEN
+        dbms_output.put_line('Error' || sqlerrm);
+END;
+/
+
+Output: 
+
+Mother Board: 60
+Video Card: 50
+RAM: 0
+Storage: 108
+CPU: 70
