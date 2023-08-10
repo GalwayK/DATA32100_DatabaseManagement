@@ -64,49 +64,49 @@ GRANT EXECUTE ON datamart.combine_address_fields TO execute_datamart_functions;
 
 CREATE ROLE execute_datamart_sequences;
 
-GRANT SELECT, ALTER ON datamart.volunteer_id TO ETLUser;
+GRANT SELECT, ALTER ON datamart.volunteer_id TO etluser;
 
-GRANT SELECT, ALTER ON datamart.donation_id TO ETLUser;
+GRANT SELECT, ALTER ON datamart.donation_id TO etluser;
 
-GRANT SELECT, ALTER ON datamart.date_id TO ETLUser;
+GRANT SELECT, ALTER ON datamart.date_id TO etluser;
 
-GRANT SELECT, ALTER ON datamart.donor_id TO ETLUser;
+GRANT SELECT, ALTER ON datamart.donor_id TO etluser;
 
-GRANT SELECT, ALTER ON datamart.address_id TO ETLUser;
+GRANT SELECT, ALTER ON datamart.address_id TO etluser;
 
 CREATE ROLE execute_prc_functions;
 
-GRANT EXECUTE ON prc.load_address_data TO execute_prc_functions; 
+GRANT EXECUTE ON prc.load_address_data TO execute_prc_functions;
 
 GRANT EXECUTE ON prc.load_volunteer_data TO execute_prc_functions;
 
-GRANT EXECUTE ON prc.load_donor_data TO execute_prc_functions; 
+GRANT EXECUTE ON prc.load_donor_data TO execute_prc_functions;
 
-GRANT EXECUTE ON prc.load_date_data TO execute_prc_functions; 
+GRANT EXECUTE ON prc.load_date_data TO execute_prc_functions;
 
 GRANT EXECUTE ON prc.load_donation_data TO execute_prc_functions;
 
 CREATE ROLE extract_transform_load_objects;
 
-GRANT EXECUTE ON ETLUser.r_donation TO extract_transform_load_objects;
+GRANT EXECUTE ON etluser.r_donation TO extract_transform_load_objects;
 
-GRANT EXECUTE ON ETLUser.arr_donations TO extract_transform_load_objects;
+GRANT EXECUTE ON etluser.arr_donations TO extract_transform_load_objects;
 
-GRANT EXECUTE ON ETLUser.r_address TO extract_transform_load_objects;
+GRANT EXECUTE ON etluser.r_address TO extract_transform_load_objects;
 
-GRANT EXECUTE ON ETLUser.arr_addresses TO extract_transform_load_objects;
+GRANT EXECUTE ON etluser.arr_addresses TO extract_transform_load_objects;
 
-GRANT EXECUTE ON ETLUser.r_volunteer TO extract_transform_load_objects;
+GRANT EXECUTE ON etluser.r_volunteer TO extract_transform_load_objects;
 
-GRANT EXECUTE ON ETLUser.arr_volunteers TO extract_transform_load_objects;
+GRANT EXECUTE ON etluser.arr_volunteers TO extract_transform_load_objects;
 
-GRANT EXECUTE ON ETLUser.r_donor TO extract_transform_load_objects;
+GRANT EXECUTE ON etluser.r_donor TO extract_transform_load_objects;
 
-GRANT EXECUTE ON ETLUser.arr_donors TO extract_transform_load_objects;
+GRANT EXECUTE ON etluser.arr_donors TO extract_transform_load_objects;
 
-GRANT EXECUTE ON ETLUser.r_date TO extract_transform_load_objects;
+GRANT EXECUTE ON etluser.r_date TO extract_transform_load_objects;
 
-GRANT EXECUTE ON ETLUser.arr_dates TO extract_transform_load_objects;
+GRANT EXECUTE ON etluser.arr_dates TO extract_transform_load_objects;
 
 // Assign Task Roles to User Role 
 
@@ -114,7 +114,7 @@ GRANT read_repository_data TO extract_transform_load_user;
 
 GRANT update_insert_data_mart TO extract_transform_load_user;
 
-GRANT execute_datamart_functions TO extract_transform_load_user; 
+GRANT execute_datamart_functions TO extract_transform_load_user;
 
 GRANT execute_prc_functions TO extract_transform_load_user;
 
@@ -124,10 +124,50 @@ GRANT extract_transform_load_objects TO prc;
 
 // Assign User Role to User 
 
+-- Grant other users access to ETLUser's Necessary Objects
+-- Assigned directly to allow use in functions and procedures
+
 GRANT extract_transform_load_user TO etluser; 
 
--- For Testing Purposes, ETLUser was originally directly granted privilege to tables
--- This access has since been revoked and replaced with privilege from task role
+GRANT EXECUTE ON etluser.r_donation TO datamart;
+
+GRANT EXECUTE ON etluser.arr_donations TO datamart;
+
+GRANT EXECUTE ON etluser.r_address TO datamart;
+
+GRANT EXECUTE ON etluser.arr_addresses TO datamart;
+
+GRANT EXECUTE ON etluser.r_volunteer TO datamart;
+
+GRANT EXECUTE ON etluser.arr_volunteers TO datamart;
+
+GRANT EXECUTE ON etluser.r_donor TO datamart;
+
+GRANT EXECUTE ON etluser.arr_donors TO datamart;
+
+GRANT EXECUTE ON etluser.r_date TO datamart;
+
+GRANT EXECUTE ON etluser.arr_dates TO datamart;
+
+GRANT EXECUTE ON etluser.r_donation TO prc;
+
+GRANT EXECUTE ON etluser.arr_donations TO prc;
+
+GRANT EXECUTE ON etluser.r_address TO prc;
+
+GRANT EXECUTE ON etluser.arr_addresses TO prc;
+
+GRANT EXECUTE ON etluser.r_volunteer TO prc;
+
+GRANT EXECUTE ON etluser.arr_volunteers TO prc;
+
+GRANT EXECUTE ON etluser.r_donor TO prc;
+
+GRANT EXECUTE ON etluser.arr_donors TO prc;
+
+GRANT EXECUTE ON etluser.r_date TO prc;
+
+GRANT EXECUTE ON etluser.arr_dates TO prc;
 
 --REVOKE  SELECT ON prc.address FROM ETLUser; 
 --
@@ -174,45 +214,5 @@ GRANT extract_transform_load_user TO etluser;
 --REVOKE DELETE ON datamart.volunteer FROM ETLUser;
 --
 --REVOKE DELETE ON datamart.donation FROM ETLUser;
-
-GRANT EXECUTE ON ETLUser.r_donation TO datamart;
-
-GRANT EXECUTE ON ETLUser.arr_donations TO datamart;
-
-GRANT EXECUTE ON ETLUser.r_address TO datamart;
-
-GRANT EXECUTE ON ETLUser.arr_addresses TO datamart;
-
-GRANT EXECUTE ON ETLUser.r_volunteer TO datamart;
-
-GRANT EXECUTE ON ETLUser.arr_volunteers TO datamart;
-
-GRANT EXECUTE ON ETLUser.r_donor TO datamart;
-
-GRANT EXECUTE ON ETLUser.arr_donors TO datamart;
-
-GRANT EXECUTE ON ETLUser.r_date TO datamart;
-
-GRANT EXECUTE ON ETLUser.arr_dates TO datamart;
-
-GRANT EXECUTE ON ETLUser.r_donation TO prc;
-
-GRANT EXECUTE ON ETLUser.arr_donations TO prc;
-
-GRANT EXECUTE ON ETLUser.r_address TO prc;
-
-GRANT EXECUTE ON ETLUser.arr_addresses TO prc;
-
-GRANT EXECUTE ON ETLUser.r_volunteer TO prc;
-
-GRANT EXECUTE ON ETLUser.arr_volunteers TO prc;
-
-GRANT EXECUTE ON ETLUser.r_donor TO prc;
-
-GRANT EXECUTE ON ETLUser.arr_donors TO prc;
-
-GRANT EXECUTE ON ETLUser.r_date TO prc;
-
-GRANT EXECUTE ON ETLUser.arr_dates TO prc;
 
 COMMIT;

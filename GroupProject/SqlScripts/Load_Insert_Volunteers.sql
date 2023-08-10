@@ -36,7 +36,7 @@ END;
 /
 
 // Procedure to Insert Volunteer Data
-CREATE OR REPLACE PROCEDURE insert_volunteer_data (
+CREATE OR REPLACE PROCEDURE datamart.insert_volunteer_data (
     v_arr_volunteers etluser.arr_volunteers
 )
     AUTHID current_user
@@ -69,7 +69,7 @@ BEGIN
 
         ELSE
             INSERT INTO datamart.dim_volunteer VALUES (
-                datamart.volunteer_id.NEXTVAL
+                datamart.volunteer_id.nextval
               , v_arr_volunteers(i).volunteer_id
               , v_arr_volunteers(i).volunteer_name
               , v_arr_volunteers(i).leader_id

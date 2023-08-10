@@ -88,8 +88,8 @@ BEGIN
         FROM
             datamart.dim_volunteer
         WHERE
-                volunteer_id = v_arr_donations(i).volunteer_id;
-                
+            volunteer_id = v_arr_donations(i).volunteer_id;
+
         SELECT
             dim_address_id
         INTO v_address_id
@@ -114,7 +114,7 @@ BEGIN
 
         IF v_dim_id = -1 THEN
             INSERT INTO datamart.fact_donation VALUES (
-                datamart.donation_id.NEXTVAL
+                datamart.donation_id.nextval
               , v_arr_donations(i).donation_id
               , v_arr_donations(i).donation_amount
               , v_arr_donations(i).type_of_donation

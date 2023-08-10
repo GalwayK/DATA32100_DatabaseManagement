@@ -37,6 +37,16 @@ BEGIN
                      prc.address ad
                 INNER JOIN prc.donation do
                 ON do.address_id = ad.address_id
+            WHERE 
+                ad.street_number IS NOT NULL 
+            AND 
+                ad.street_name IS NOT NULL 
+            AND 
+                ad.postal_code IS NOT NULL 
+            AND 
+                ad.city IS NOT NULL 
+            AND    
+                ad.province IS NOT NULL
         ) adr;
 
     RETURN p_arr_addresses;
