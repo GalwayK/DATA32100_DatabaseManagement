@@ -59,6 +59,12 @@ CREATE TABLE fact_donation (
         REFERENCES dim_address ( dim_address_id )
 );
 
+ALTER SEQUENCE datamart.address_id RESTART;
+ALTER SEQUENCE datamart.date_id RESTART;
+ALTER SEQUENCE datamart.donor_id RESTART;
+ALTER SEQUENCE datamart.volunteer_id RESTART;
+ALTER SEQUENCE datamart.donation_id RESTART;
+
 DELETE FROM datamart.fact_donation;
 
 DELETE FROM datamart.dim_volunteer;

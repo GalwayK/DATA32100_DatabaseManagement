@@ -1,0 +1,9 @@
+// Exercise 13.1 
+
+AUDIT SELECT TABLE, INSERT TABLE, DELETE TABLE, EXECUTE PROCEDURE BY ACCESS WHENEVER NOT SUCCESSFUL;
+
+SELECT * FROM dba_audit_trail;
+
+GRANT SELECT ON datamart.fact_donation TO prc;
+
+SELECT * FROM dba_audit_trail;

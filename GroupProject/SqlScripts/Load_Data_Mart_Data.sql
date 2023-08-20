@@ -1,11 +1,5 @@
 SET SERVEROUTPUT ON; 
 
-ALTER SEQUENCE datamart.address_id RESTART;
-ALTER SEQUENCE datamart.date_id RESTART;
-ALTER SEQUENCE datamart.donor_id RESTART;
-ALTER SEQUENCE datamart.volunteer_id RESTART;
-ALTER SEQUENCE datamart.donation_id RESTART;
-
 // Master Code Block to Run All Procedures 
 DECLARE
     p_arr_volunteers ETLUser.arr_volunteers;
@@ -62,21 +56,5 @@ EXCEPTION
         ROLLBACK;
 END;
 /
-
-SELECT * FROM prc.donation;
-
-SELECT * FROM prc.volunteer;
-
-SELECT * FROM prc.address;
-
-SELECT * FROM datamart.dim_volunteer;
-
-SELECT * FROM datamart.dim_donor;
-
-SELECT * FROM datamart.dim_address;
-
-SELECT * FROM datamart.dim_donation_date;
-
-SELECT * FROM datamart.fact_donation;
 
 COMMIT;

@@ -1,0 +1,53 @@
+CREATE TABLE volunteers (
+    volunteer_id int NOT NULL PRIMARY KEY ,
+    first_name VARCHAR2(50),
+    last_name VARCHAR2(50),
+    leader_id int
+);
+
+CREATE SEQUENCE seq_volunteers
+MINVALUE 1
+START WITH 1
+INCREMENT BY 1
+CACHE 1;
+
+
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Rico', 'Bass', 1);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Wanda', 'Combs', 2);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Kelly', 'Collins', 3);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Lewis', 'Tyler', 4);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Eloy', 'Donovan', 5);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Brock', 'Reynolds', 6);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Clemente', 'Liu', 7);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Irvin', 'Hughes', 8);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Lydia', 'Cooley', 9);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Kasey', 'Hood', 10);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Eve', 'Spence', 1);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Korey', 'Espinoza', 1);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Jeannine', 'Chaney', 2);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Hosea', 'Palmer', 2);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Chandra', 'Mckinney', 2);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Jean', 'Schroeder', 3);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Dora', 'Patrick', 3);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Weston', 'Rasmussen', 4);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Carmela', 'Herman', 4);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Avery', 'Garner', 4);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Stuart', 'Greene', 5);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Lauren', 'Mcpherson', 5);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Amber', 'Davenport', 6);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Edith', 'Hopkins', 6);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Chadwick', 'Beasley', 7);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Raquel', 'Curry', 7);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, '', 'Kemp', 7);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Charley', 'Mcfarland', 8);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Elmo', 'Mercado', 8);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Tiffany', 'Nichols', 9);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Rocky', 'Duarte', 9);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Shelton', 'Hunt', 10);
+INSERT INTO volunteers VALUES(seq_volunteers.nextval, 'Laurie', 'Wagner', 10);
+
+select * from volunteers;
+
+
+
+

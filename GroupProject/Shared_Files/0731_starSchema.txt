@@ -1,0 +1,44 @@
+create table donor (
+    donor_id integer primary key,
+    name varchar2(50),
+    donate_time integer
+);
+
+
+create table address (
+    address_id integer primary key,
+    postal_code varchar2(10),
+    address varchar2(100)
+    
+);
+
+create table volunteer (
+    volunteer_id int primary key,
+    name varchar2(50),
+    leader_id int,
+    leader_name varchar2(50) 
+);
+
+create table time (
+    time_id int primary key,
+    donation_date varchar2(20),
+    month_number int,
+    month_name varchar2(10),
+    year int,
+    day_of_week varchar2(10)
+);  
+
+create table donation (
+    donation_id int primary key,
+    amount number,
+    payment_type varchar2(10),
+    donor_id int, 
+    volunteer_id int,
+    time_id int,
+    address_id int,
+    constraint FK_donor foreign key (donor_id) references donor(donor_id),
+    constraint FK_volunteer foreign key (volunteer_id) references volunteer(volunteer_id),
+    constraint FK_time foreign key (time_id) references time(time_id),
+    constraint FK_address foreign key (address_id) references address(address_id)
+);
+

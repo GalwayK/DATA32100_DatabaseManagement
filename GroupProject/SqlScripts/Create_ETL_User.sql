@@ -124,10 +124,10 @@ GRANT extract_transform_load_objects TO prc;
 
 // Assign User Role to User 
 
--- Grant other users access to ETLUser's Necessary Objects
--- Assigned directly to allow use in functions and procedures
+GRANT extract_transform_load_user TO etluser;
 
-GRANT extract_transform_load_user TO etluser; 
+-- Grant other users access to ETLUser's Necessary Objects
+-- Assigned directly to allow use in functions and procedure
 
 GRANT EXECUTE ON etluser.r_donation TO datamart;
 
@@ -168,51 +168,5 @@ GRANT EXECUTE ON etluser.arr_donors TO prc;
 GRANT EXECUTE ON etluser.r_date TO prc;
 
 GRANT EXECUTE ON etluser.arr_dates TO prc;
-
---REVOKE  SELECT ON prc.address FROM ETLUser; 
---
---REVOKE  SELECT ON prc.donation FROM ETLUser; 
---
---REVOKE  SELECT ON prc.volunteer FROM ETLUser; 
---
---REVOKE  INSERT ON datamart.address FROM ETLUser; 
---
---REVOKE  INSERT ON datamart.donation FROM ETLUser; 
---
---REVOKE  INSERT ON datamart.donation_date FROM ETLUser;
---
---REVOKE  INSERT ON datamart.donor FROM ETLUser; 
---
---REVOKE  INSERT ON datamart.volunteer FROM ETLUser; 
---
---REVOKE  UPDATE ON datamart.address FROM ETLUser; 
---
---REVOKE UPDATE ON datamart.donation FROM ETLUser; 
---
---REVOKE UPDATE ON datamart.donation_date FROM ETLUser; 
---
---REVOKE UPDATE ON datamart.donor FROM ETLUser; 
---
---REVOKE UPDATE ON datamart.volunteer FROM ETLUser; 
---
---REVOKE SELECT ON datamart.donor FROM ETLUser;
---
---REVOKE SELECT ON datamart.donation_date FROM ETLUser;
---
---REVOKE SELECT ON datamart.address FROM ETLUser;
---
---REVOKE SELECT ON datamart.volunteer FROM ETLUser;
---
---REVOKE SELECT ON datamart.donation FROM ETLUser;
---
---REVOKE DELETE ON datamart.donor FROM ETLUser;
---
---REVOKE DELETE ON datamart.donation_date FROM ETLUser;
---
---REVOKE DELETE ON datamart.address FROM ETLUser;
---
---REVOKE DELETE ON datamart.volunteer FROM ETLUser;
---
---REVOKE DELETE ON datamart.donation FROM ETLUser;
 
 COMMIT;
